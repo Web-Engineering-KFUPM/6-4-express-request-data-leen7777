@@ -35,6 +35,7 @@ LAB SETUP INSTRUCTIONS
  *   HINT: 
  *     const app = express();
  *     app.listen(3000, ()=> console.log(...));
+ *
  * 
  *============================================
  * TODO-2 (/echo route):
@@ -126,3 +127,39 @@ LAB SETUP INSTRUCTIONS
 // Start the server by listening
 
 
+  import express from "express";
+
+  const app = express();
+
+  app.get("/echo", (req, res) => {
+    const { name, age } = req.query;
+    if (!name || !age) {
+      return res.status(400).json({ ok: false,
+  error: "name & age required" });
+    }
+    res.json({ ok: true, name, age, msg: `Hello
+  ${name}, you are ${age}` });
+  });
+
+  app.get("/profile/:first/:last", (req, res) => {
+    const { first, last } = req.params;
+    res.json({ ok: true, fullName: `${first}
+  ${last}` });
+  });
+
+  app.param("userId", (req, res, next, userId) =>
+  {
+    const num = Number(userId);
+    if (!Number.isFinite(num) || num <= 0) {
+      return res.status(400).json({ ok: false,
+  error: "userId must be positive number" });
+    }
+    req.userIdNum = num;
+    next();
+  });
+
+  app.get("/users/:userId", (req, res) => {
+    res.json({ ok: true, userId: req.userIdNum });
+  });
+
+  app.listen(3000, () => console.log("API running at http://localhost:3000"));
