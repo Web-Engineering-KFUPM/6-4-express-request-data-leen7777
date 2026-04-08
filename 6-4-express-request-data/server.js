@@ -130,7 +130,9 @@ LAB SETUP INSTRUCTIONS
   import express from "express";
 
   const app = express();
-
+  app.get("/", (req, res) => {
+    res.send("server is up");                
+  });             
   app.get("/echo", (req, res) => {
     const { name, age } = req.query;
     if (!name || !age) {
